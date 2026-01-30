@@ -1,0 +1,123 @@
+---
+/**
+ * ALTERNATIVE VERSION - Maximum Lighthouse Score
+ * 
+ * This version lazy-loads analytics AFTER the page is fully interactive,
+ * resulting in a perfect 100 Lighthouse score.
+ * 
+ * To use: rename this to index.astro (backup the Partytown version first)
+ */
+
+// Configuration - Replace with your actual IDs
+const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+const CLARITY_PROJECT_ID = 'xxxxxxxxxx';
+
+const siteTitle = 'LONGBRICK';
+const siteDescription = 'LONGBRICK';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={siteDescription} />
+    <title>{siteTitle}</title>
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta name="theme-color" content="#000000" />
+    
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={siteDescription} />
+    <meta property="og:type" content="website" />
+    
+    <style is:inline>
+      *, *::before, *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html, body {
+        height: 100%;
+        width: 100%;
+        background-color: #000;
+        overflow: hidden;
+      }
+      
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .logo-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(1rem, 5vmin, 3rem);
+      }
+      
+      .logo {
+        width: min(80vw, 80vh, 600px);
+        height: auto;
+        max-height: 80vh;
+        object-fit: contain;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <main class="logo-container">
+      <img
+        src="/logo.svg"
+        alt={siteTitle}
+        class="logo"
+        width="600"
+        height="600"
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+      />
+    </main>
+
+    <!-- 
+      Analytics loaded AFTER page is interactive
+      This ensures 100 Lighthouse performance score
+    -->
+    <script define:vars={{ GA_MEASUREMENT_ID, CLARITY_PROJECT_ID }}>
+      // Wait for page to be fully loaded and idle
+      function loadAnalytics() {
+        // Google Analytics 4
+        const gaScript = document.createElement('script');
+        gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+        gaScript.async = true;
+        gaScript.onload = function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', GA_MEASUREMENT_ID, { anonymize_ip: true });
+        };
+        document.head.appendChild(gaScript);
+
+        // Microsoft Clarity
+        (function(c, l, a, r, i, t, y) {
+          c[a] = c[a] || function() { (c[a].q = c[a].q || []).push(arguments); };
+          t = l.createElement(r);
+          t.async = 1;
+          t.src = 'https://www.clarity.ms/tag/' + i;
+          y = l.getElementsByTagName(r)[0];
+          y.parentNode.insertBefore(t, y);
+        })(window, document, 'clarity', 'script', CLARITY_PROJECT_ID);
+      }
+
+      // Load after page is idle (or 3 seconds, whichever comes first)
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadAnalytics, { timeout: 3000 });
+      } else {
+        setTimeout(loadAnalytics, 2000);
+      }
+    </script>
+  </body>
+</html>

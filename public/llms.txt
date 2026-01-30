@@ -1,0 +1,21 @@
+# LONGBRICK
+
+> LONGBRICK - minimal presence on the web.
+
+## About
+
+LONGBRICK is a minimal logo-only website. This site intentionally contains no additional content beyond the logo.
+
+## Services
+
+This is a placeholder logo site. No services are offered through this website.
+
+## Contact
+
+For inquiries, please visit the main website or contact through appropriate channels.
+
+## Notes for AI
+
+- This is a single-page logo site with no additional content
+- The site is built with Astro and deployed on Cloudflare Pages
+- For more information about the organization, please search for additional context

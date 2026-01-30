@@ -1,0 +1,188 @@
+---
+import { config } from '../config.js';
+
+// Destructure config for cleaner template usage
+const {
+  siteName,
+  siteDescription,
+  siteUrl,
+  googleAnalyticsId,
+  clarityProjectId,
+  cloudflareAnalyticsToken,
+  backgroundColor,
+  textColor,
+  logoSize,
+  fadeIn,
+  fadeInDuration,
+  enableStructuredData,
+  organizationType,
+} = config;
+
+// Logo size presets
+const logoSizes = {
+  normal: 'min(92vw, 80vh)',
+  large: 'min(95vw, 90vh)',
+  massive: 'min(98vw, 95vh)',
+};
+const logoWidth = logoSizes[logoSize] || logoSizes.normal;
+
+// Build JSON-LD structured data
+const structuredData = enableStructuredData ? JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': organizationType,
+  name: siteName,
+  url: siteUrl,
+}) : null;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={siteDescription} />
+    <title>{siteName}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="48x48" />
+
+    <!-- Preconnect for performance -->
+    {googleAnalyticsId && <link rel="preconnect" href="https://www.googletagmanager.com" />}
+    {clarityProjectId && <link rel="preconnect" href="https://www.clarity.ms" />}
+
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content={backgroundColor} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={siteName} />
+    <meta property="og:description" content={siteDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:image" content={`${siteUrl}/og-image.png`} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={siteName} />
+    <meta name="twitter:description" content={siteDescription} />
+    <meta name="twitter:image" content={`${siteUrl}/og-image.png`} />
+
+    <!-- Structured Data -->
+    {structuredData && <script type="application/ld+json" set:html={structuredData} />}
+
+    <!-- Critical CSS - inlined for performance -->
+    <style is:inline define:vars={{ backgroundColor, textColor, logoWidth, fadeInDuration: `${fadeInDuration}s` }}>
+      *, *::before, *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html, body {
+        height: 100%;
+        width: 100%;
+        background-color: var(--backgroundColor);
+        overflow: hidden;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .logo-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.5rem, 2vmin, 1.5rem);
+      }
+
+      .logo {
+        width: var(--logoWidth);
+        height: auto;
+        max-height: 85vh;
+        object-fit: contain;
+      }
+
+      .logo.animate {
+        animation: fade-in var(--fadeInDuration) ease-out;
+      }
+
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+          transform: scale(0.96);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .logo.animate {
+          animation: none;
+        }
+      }
+    </style>
+
+    <!-- Google Analytics 4 via Partytown -->
+    {googleAnalyticsId && (
+      <>
+        <script
+          type="text/partytown"
+          src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+        />
+        <script type="text/partytown" define:vars={{ googleAnalyticsId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', googleAnalyticsId, {
+            anonymize_ip: true,
+          });
+        </script>
+      </>
+    )}
+
+    <!-- Microsoft Clarity via Partytown -->
+    {clarityProjectId && (
+      <script type="text/partytown" define:vars={{ clarityProjectId }}>
+        (function(c, l, a, r, i, t, y) {
+          c[a] = c[a] || function() { (c[a].q = c[a].q || []).push(arguments); };
+          t = l.createElement(r);
+          t.async = 1;
+          t.src = 'https://www.clarity.ms/tag/' + i;
+          y = l.getElementsByTagName(r)[0];
+          y.parentNode.insertBefore(t, y);
+        })(window, document, 'clarity', 'script', clarityProjectId);
+      </script>
+    )}
+  </head>
+
+  <body>
+    <main class="logo-container">
+      <img
+        src="/logo.svg"
+        alt={siteName}
+        class:list={['logo', { animate: fadeIn }]}
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+      />
+    </main>
+
+    <!-- Cloudflare Web Analytics (Optional - Zero JS Impact) -->
+    {cloudflareAnalyticsToken && (
+      <script
+        defer
+        src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon={`{"token": "${cloudflareAnalyticsToken}"}`}
+      />
+    )}
+  </body>
+</html>

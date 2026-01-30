@@ -1,0 +1,78 @@
+---
+import { config } from '../config.js';
+
+const { siteName, backgroundColor, textColor } = config;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - {siteName}</title>
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="48x48" />
+    <meta name="theme-color" content={backgroundColor} />
+    <style is:inline define:vars={{ backgroundColor, textColor }}>
+      *, *::before, *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html, body {
+        height: 100%;
+        width: 100%;
+        background-color: var(--backgroundColor);
+        color: var(--textColor);
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+      }
+
+      .logo {
+        width: min(40vw, 40vh, 200px);
+        height: auto;
+        opacity: 0.5;
+      }
+
+      h1 {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        font-weight: 300;
+        letter-spacing: 0.2em;
+        opacity: 0.8;
+      }
+
+      a {
+        color: var(--textColor);
+        text-decoration: none;
+        font-size: 0.875rem;
+        letter-spacing: 0.1em;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+      }
+
+      a:hover {
+        opacity: 1;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        a {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <img src="/logo.svg" alt={siteName} class="logo" />
+    <h1>404</h1>
+    <a href="/">← Return Home</a>
+  </body>
+</html>
