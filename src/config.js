@@ -13,8 +13,8 @@ export const config = {
   // OPTIONAL - Analytics
   // ===================
   // Add these later once site is live
-  googleAnalyticsId: '',
-  clarityProjectId: '',
+  googleAnalyticsId: 'G-L1BZ8QN2HJ',
+  clarityProjectId: 'v9qefl29ar',
   cloudflareAnalyticsToken: '',
 
   // ===================
