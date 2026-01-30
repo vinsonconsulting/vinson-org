@@ -18,10 +18,17 @@ export const config = {
   cloudflareAnalyticsToken: '',
 
   // ===================
-  // OPTIONAL - Styling
+  // Styling
   // ===================
   backgroundColor: '#000000',
+  textColor: '#ffffff',
   logoSize: 'massive',
+
+  // Animation
   fadeIn: true,
-  fadeInDuration: '1.2s',
+  fadeInDuration: 1.2,
+
+  // Structured data (JSON-LD)
+  enableStructuredData: true,
+  organizationType: 'Organization',
 };
