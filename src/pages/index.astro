@@ -71,7 +71,7 @@ const structuredData = enableStructuredData ? JSON.stringify({
     {structuredData && <script type="application/ld+json" set:html={structuredData} />}
 
     <!-- Critical CSS - inlined for performance -->
-    <style is:inline define:vars={{ backgroundColor, textColor, logoWidth, fadeInDuration: `${fadeInDuration}s` }}>
+    <style define:vars={{ backgroundColor, textColor, logoWidth, fadeInDuration: `${fadeInDuration}s` }}>
       *, *::before, *::after {
         margin: 0;
         padding: 0;
@@ -81,7 +81,6 @@ const structuredData = enableStructuredData ? JSON.stringify({
       html, body {
         height: 100%;
         width: 100%;
-        background-color: #000000;
         background-color: var(--backgroundColor);
         overflow: hidden;
       }
